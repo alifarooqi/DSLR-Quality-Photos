@@ -23,10 +23,10 @@ class DataLoader(object):
         if (not self.config.num_files_to_load) and self.mode == "training_data":
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))
             dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon/*")))
-        elif (not self.config.num_files_to_load) and self.mode == "test_data/full_size_test_images":
+        elif (not self.config.num_files_to_load) and self.mode == "test_data/patches":
             print("test files loading: ", os.path.join(self.config.dataset_dir, self.phone, self.mode, "*"))
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "*")))
-        elif self.config.num_files_to_load and self.mode == "test_data/full_size_test_images":
+        elif self.config.num_files_to_load and self.mode == "test_data/patches":
             print("test files loading: ", os.path.join(self.config.dataset_dir, self.phone, self.mode, "*"))
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "*")))[
                           :self.config.num_files_to_load]
