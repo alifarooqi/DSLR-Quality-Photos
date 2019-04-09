@@ -2,8 +2,8 @@ from glob import glob
 from multiprocessing import Pool
 from math import ceil
 from utils import *
-from sklearn.model_selection import train_test_split
 import time
+import os
 import scipy
 
 
@@ -12,69 +12,50 @@ class DataLoader(object):
         self.config = config
         self.mean = None
         self.std = None
-        self.noisy_train, self.noisy_test, self.gt_train, self.gt_test, self.width, self.height = self.load_data()
+        self.phone = config.phone_model
+        if config.test_mode:
+            self.mode = "test_data"
+        else:
+            self.mode = "training_data"
+        self.phone_data, self.dslr_data, self.width, self.height = self.load_data()
 
     def load_data(self):
-        files = None
         if not self.config.num_files_to_load:
-            files = sorted(glob(self.config.dataset_dir))
+            phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone)))
+            dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon")))
         else:
-            files = sorted(glob(self.config.dataset_dir))[:self.config.num_files_to_load]
-        print("number of total files to be loaded: ", len(files))
+            phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone)))[
+                          :self.config.num_files_to_load]
+            dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon")))[
+                         :self.config.num_files_to_load]
+        print("number of total files to be loaded: ", len(phone_files))
 
-        noisy_list = [file for idx, file in enumerate(files) if idx % 2 == 1]
-        gt_list = [file for idx, file in enumerate(files) if idx % 2 == 0]
-
-        noisy_train_list, noisy_test_list, gt_train_list, gt_test_list = train_test_split(noisy_list, gt_list,
-                                                                                          test_size=self.config.test_size,
-                                                                                          random_state=1)
-        print("Dataset: SSID, %d image pairs" % (len(noisy_list)))
         start_time = time.time()
         pool = Pool(processes=8)
-        train_num = int(ceil(len(noisy_train_list) / 8))
+        train_num = int(ceil(len(phone_files) / 8))
 
-        # Load training data
-        noisy_loaders = [
+        # Load data
+        phone_loaders = [
             pool.apply_async(load_files, (
-                noisy_train_list[i * train_num:i * train_num + train_num], self.config.res, self.config.test_mode))
+                phone_files[i * train_num:i * train_num + train_num], self.config.res, self.config.test_mode))
             for i in range(8)]
-        noisy_train = []
-        for res in noisy_loaders:
-            noisy_train.extend(res.get())
+        phone_data = []
+        for res in phone_loaders:
+            phone_data.extend(res.get())
 
-        gt_loaders = [
+        dslr_loaders = [
             pool.apply_async(load_files, (
-                gt_train_list[i * train_num:i * train_num + train_num], self.config.res, self.config.test_mode))
+                dslr_files[i * train_num:i * train_num + train_num], self.config.res, self.config.test_mode))
             for i in range(8)]
-        gt_train = []
-        for res in gt_loaders:
-            gt_train.extend(res.get())
+        dslr_data = []
+        for res in dslr_loaders:
+            dslr_data.extend(res.get())
 
         time2 = time.time() - start_time
-        print("%d image pairs loaded for training set! setting took: %4.4fs" % (len(noisy_train), time2))
+        print("%d image pairs loaded for training set! setting took: %4.4fs" % (len(phone_data), time2))
 
-        # Load testing data
-        noisy_loaders = [
-            pool.apply_async(load_files, (
-            noisy_test_list[i * train_num:i * train_num + train_num], self.config.res, self.config.test_mode))
-            for i in range(8)]
-        noisy_test = []
-        for res in noisy_loaders:
-            noisy_test.extend(res.get())
-
-        gt_loaders = [
-            pool.apply_async(load_files, (
-            gt_test_list[i * train_num:i * train_num + train_num], self.config.res, self.config.test_mode))
-            for i
-            in range(8)]
-        gt_test = []
-        for res in gt_loaders:
-            gt_test.extend(res.get())
-
-        shape = np.shape(noisy_train)
-        print (shape, len(noisy_train), len(noisy_train[0]), len(noisy_train[0][0]), np.asarray(noisy_train).shape)
-        width = len(noisy_train[0])
-        height = len(noisy_train[0][0])
+        width = len(phone_data[0])
+        height = len(phone_data[0][0])
 
         # standardize input images
         # self.mean = np.mean(noisy_train, axis=(1, 2), keepdims=True)
@@ -82,38 +63,35 @@ class DataLoader(object):
         # noisy_train = (noisy_train - self.mean) / self.std
         # noisy_test = (noisy_test - self.mean) / self.std
 
-        print("%d image pairs loaded for testing set! setting took: %4.4fs" % (len(noisy_test), time.time() - time2))
-        return noisy_train, noisy_test, gt_train, gt_test, width, height
+        return phone_data, dslr_data, width, height
 
     def get_batch(self):
-        noisy_batch = np.zeros(
+        phone_batch = np.zeros(
             [self.config.batch_size, self.width, self.height, 3],
             dtype='float32')
-        gt_batch = np.zeros(
+        dslr_batch = np.zeros(
             [self.config.batch_size, self.width, self.height, 3],
             dtype='float32')
 
         for i in range(self.config.batch_size):
-            index = np.random.randint(len(self.noisy_train))
-            noisy_patch = self.noisy_train[index]
-            gt_patch = self.gt_train[index]
+            index = np.random.randint(len(self.phone_data))
+            phone_patch = self.phone_data[index]
+            dslr_patch = self.dslr_data[index]
 
             # randomly flip, rotate patch (assuming that the patch shape is square)
             if self.config.augment:
                 prob = np.random.rand()
                 if prob > 0.5:
-                    noisy_patch = np.flip(noisy_patch, axis=0)
-                    gt_patch = np.flip(gt_patch, axis=0)
+                    phone_patch = np.flip(phone_patch, axis=0)
+                    dslr_patch = np.flip(dslr_patch, axis=0)
                 prob = np.random.rand()
                 if prob > 0.5:
-                    noisy_patch = np.flip(noisy_patch, axis=1)
-                    gt_patch = np.flip(gt_patch, axis=1)
+                    phone_patch = np.flip(phone_patch, axis=1)
+                    dslr_patch = np.flip(dslr_patch, axis=1)
                 prob = np.random.rand()
                 if prob > 0.5:
-                    noisy_patch = np.rot90(noisy_patch)
-                    gt_patch = np.rot90(gt_patch)
-            # noisy_batch[i,:,:,:] = noisy_patch
-            # gt_batch[i,:,:,:] = gt_patch
-            noisy_batch[i, :, :, :] = preprocess(noisy_patch)  # pre/post processing function is defined in utils.py
-            gt_batch[i, :, :, :] = preprocess(gt_patch)
-        return noisy_batch, gt_batch
+                    phone_patch = np.rot90(phone_patch)
+                    dslr_patch = np.rot90(dslr_patch)
+            phone_batch[i, :, :, :] = preprocess(phone_patch)  # pre/post processing function is defined in utils.py
+            dslr_batch[i, :, :, :] = preprocess(dslr_patch)
+        return phone_batch, dslr_batch

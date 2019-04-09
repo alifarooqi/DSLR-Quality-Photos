@@ -30,10 +30,14 @@ class Model(object):
 
         print("setting up loss functions")
         self.d_loss = -tf.reduce_mean(tf.log(self.discriminator_gt) + tf.log(1. - self.discriminator_enhanced))
+
+        self.color_loss = 255 * tf.reduce_mean(tf.square(gaussian_blur(self.gt_in) - gaussian_blur(self.generated)))
         self.g_loss = self.config.w_adversarial_loss * -tf.reduce_mean(
-            tf.log(self.discriminator_enhanced)) + self.config.w_pixel_loss * calc_pixel_loss(self.gt_in,
-                                                                                              self.generated) + self.config.w_content_loss * get_content_loss(
-            self.config.vgg_dir, self.gt_in, self.generated, self.config.content_layer)
+            tf.log(
+                self.discriminator_enhanced)) + self.config.w_pixel_loss * self.color_loss + self.config.w_content_loss * get_content_loss(
+            self.config.vgg_dir, self.gt_in, self.generated,
+            self.config.content_layer) + self.config.w_tv_loss * tf.reduce_mean(
+            tf.image.total_variation(self.generated))
 
         t_vars = tf.trainable_variables()
         discriminator_vars = [var for var in t_vars if 'discriminator' in var.name]
@@ -51,30 +55,36 @@ class Model(object):
         print("Setting up the generator network")
         use_bn = self.config.use_bn
         with tf.variable_scope("generator", reuse=tf.AUTO_REUSE):
-            conv1 = convlayer(feature_in, 32, 3, 1, "conv_1", use_bn)
-            conv2 = convlayer(conv1, 64, 3, 1, "conv_2", use_bn)
-            conv3 = convlayer(conv2, 128, 3, 1, "conv_3", use_bn)
-            conv4 = convlayer(conv3, 128, 3, 1, "conv_4", use_bn)
-            rb1 = resblock(conv4, 128, 1, use_bn)
-            rb2 = resblock(rb1, 128, 2, use_bn)
-            rb3 = resblock(rb2, 128, 3, use_bn)
-            conv5 = convlayer(rb3, 128, 3, 1, "conv_5", use_bn)
-            conv6 = convlayer(conv5, 64, 3, 1, "conv_6", use_bn)
-            conv7 = convlayer(conv6, 3, 3, 1, "conv_7", False, "tanh")
-            output = tf.clip_by_value(tf.add(conv7, feature_in), 0.0, 1.0)
-            return output
+            conv1 = convlayer(feature_in, 64, 9, 1, "conv_1", use_bn)
+            rb1 = resblock(conv1, 64, 1, use_bn)
+            rb2 = resblock(rb1, 64, 2, use_bn)
+            rb3 = resblock(rb2, 64, 3, use_bn)
+            rb4 = resblock(rb3, 64, 4, use_bn)
+            conv2 = convlayer(rb4, 64, 3, 1, "conv_2", use_bn)
+            conv3 = convlayer(conv2, 64, 3, 1, "conv_3", use_bn)
+            conv4 = convlayer(conv3, 64, 3, 1, "conv_4", use_bn)
+            conv5 = convlayer(conv4, 3, 3, 1, "conv_5", False, activation=None)
+            return conv5
 
     def discriminator(self, feature_in):
         print("setting up the discriminator network")
         use_bn = self.config.use_bn
         with tf.variable_scope("discriminator", reuse=tf.AUTO_REUSE):
-            conv1 = convlayer(feature_in, 48, 3, 2, "conv_1", use_bn)
-            conv2 = convlayer(conv1, 96, 3, 2, "conv_2", use_bn)
-            conv3 = convlayer(conv2, 192, 3, 2, "conv_3", use_bn)
-            conv4 = convlayer(conv3, 96, 3, 1, "conv_4", use_bn)
+            in_gs = tf.image.rgb_to_grayscale(feature_in)
+            conv1 = convlayer(in_gs, 48, 11, 5, "conv_1", use_bn, activation=None)
+            conv1 = lrelu(conv1)
+            conv2 = convlayer(conv1, 128, 5, 2, "conv_2", True, activation=None)
+            conv2 = lrelu(conv2)
+            conv3 = convlayer(conv2, 192, 3, 1, "conv_3", True, activation=None)
+            conv3 = lrelu(conv3)
+            conv4 = convlayer(conv3, 192, 3, 1, "conv_4", True, activation=None)
+            conv4 = lrelu(conv4)
+            conv5 = convlayer(conv4, 128, 3, 2, "conv_5", True, activation=None)
+            conv5 = lrelu(conv5)
             flat = tf.contrib.layers.flatten(conv4)
-            fc1 = tf.layers.dense(flat, units=96)
-            logits = tf.layers.dense(fc1, units=1)
+            fc1 = tf.layers.dense(flat, units=1024, activation=None)
+            fc1 = lrelu(fc1)
+            logits = tf.layers.dense(fc1, units=1, activation=None)
             prob = tf.nn.sigmoid(logits)
             return prob
 
