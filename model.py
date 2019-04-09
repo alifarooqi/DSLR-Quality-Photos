@@ -9,10 +9,8 @@ class Model(object):
         self.sess = session
         self.config = config
         self.data_loader = dataloader
-        self.noisy_train = dataloader.noisy_train
-        self.noisy_test = dataloader.noisy_test
-        self.gt_train = dataloader.gt_train
-        self.gt_test = dataloader.gt_test
+        self.noisy_train = dataloader.phone_data
+        self.gt_train = dataloader.dslr_data
 
         self.generator_in = tf.placeholder(shape=[None, self.config.res, self.config.res, 3], dtype=tf.float32,
                                            name="generator_input")
