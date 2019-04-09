@@ -27,8 +27,8 @@ class DataLoader(object):
             print("test files loading: ", os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*"))
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))
         elif self.config.num_files_to_load and self.mode == "test_data/patches":
-            print("test files loading: ", os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*"))
-            phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))[
+            print("test files loading: ", os.path.join(self.config.dataset_dir, self.phone, "training_data", self.phone, "*"))
+            phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, "training_data", self.phone, "*")))[
                           :self.config.num_files_to_load]
         else:
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))[
