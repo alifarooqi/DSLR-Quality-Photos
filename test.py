@@ -14,11 +14,12 @@ parser.add_argument("--batch_size", type=int, help="batch size for each epoch", 
 parser.add_argument("--test_size", type=float, help="fraction for test size", default=0.10)
 parser.add_argument("--dataset_dir", type=str, help="directory for the SSID dataset only",
                     default="dataset/dped")
-parser.add_argument("--res", type=int, help="resolution of images", default=None)
+parser.add_argument("--res", type=int, help="resolution of images", default=100)
 parser.add_argument("--augment", help="use data augmentation or not. default is True", type=bool, default=True)
 parser.add_argument("--w_content_loss", type=float, help="weightage for the content loss based on the VGG19",
                     default=0.5)
 parser.add_argument("--w_adversarial_loss", type=float, help="weightage for discriminator guesses", default=1.0)
+parser.add_argument("--w_tv_loss", type=float, help="weightage for total variance", default=1.0)
 parser.add_argument("--w_pixel_loss", type=float, help="weightage for loss based on difference from GT", default=1.0)
 parser.add_argument("--learning_rate", type=float, help="learning rate", default=0.002)
 parser.add_argument("--vgg_dir", type=str, help="directory for trained VGG 19 model",

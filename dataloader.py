@@ -24,7 +24,7 @@ class DataLoader(object):
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))
             dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon/*")))
         elif self.mode == "test_data/full_size_test_images":
-            print("test files loading: ",os.path.join(self.config.dataset_dir, self.phone, self.mode, "*"))
+            print("test files loading: ", os.path.join(self.config.dataset_dir, self.phone, self.mode, "*"))
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "*")))
         else:
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))[
