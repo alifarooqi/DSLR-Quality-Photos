@@ -21,12 +21,12 @@ class DataLoader(object):
 
     def load_data(self):
         if not self.config.num_files_to_load:
-            phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone)))
-            dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon")))
+            phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))
+            dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon/*")))
         else:
-            phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone)))[
+            phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))[
                           :self.config.num_files_to_load]
-            dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon")))[
+            dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon/*")))[
                          :self.config.num_files_to_load]
         print("number of total files to be loaded: ", len(phone_files))
 
