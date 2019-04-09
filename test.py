@@ -13,7 +13,7 @@ parser.add_argument("--use_bn", help="use batch nor or not. default is True", ty
 parser.add_argument("--batch_size", type=int, help="batch size for each epoch", default=5)
 parser.add_argument("--test_size", type=float, help="fraction for test size", default=0.10)
 parser.add_argument("--dataset_dir", type=str, help="directory for the SSID dataset only",
-                    default="dataset/SIDD_Small_sRGB_Only/Data/*/*.PNG")
+                    default="dataset/dped")
 parser.add_argument("--res", type=int, help="resolution of images", default=None)
 parser.add_argument("--augment", help="use data augmentation or not. default is True", type=bool, default=True)
 parser.add_argument("--w_content_loss", type=float, help="weightage for the content loss based on the VGG19",
