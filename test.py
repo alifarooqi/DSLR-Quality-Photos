@@ -30,6 +30,7 @@ parser.add_argument("--num_files_to_load", type=int, help="number of images to l
 parser.add_argument("--load_checkpoint", type=bool, help="load checkpoint or not", default=True)
 parser.add_argument("--test_mode", type=bool, help="testing mode or not", default=True)
 parser.add_argument("--num_tests", type=int, help="number of tests to run", default=20)
+parser.add_argument("--phone_model", type=str, help="phone model to train", default="blackberry")
 
 config = parser.parse_args()
 
