@@ -73,7 +73,7 @@ class DataLoader(object):
             for res in dslr_loaders:
                 dslr_data.extend(res.get())
         else:
-            dslr_data = []
+            dslr_data = np.zeros([len(phone_data)])
 
         time2 = time.time() - start_time
         print("%d image pairs loaded for training set! setting took: %4.4fs" % (len(phone_data), time2))
