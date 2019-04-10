@@ -122,9 +122,10 @@ class Model(object):
         else:
             print(" [!] Load failed...")
             return [], []
-        noisy_batch, _ = self.data_loader.get_batch()
-        enhanced_batch = self.sess.run(self.generator_test, feed_dict={self.generator_in_test: noisy_batch})
-        return noisy_batch, enhanced_batch
+        for i in range(len(self.noisy_train)):
+            self.noisy_train[i, :, :, :] = preprocess(self.noisy_train[i])
+        enhanced_batch = self.sess.run(self.generator_test, feed_dict={self.generator_in_test: self.noisy_train})
+        return noisy_train, enhanced_batch
 
     def save(self, epochnum=None):
         checkpoint_dir = os.path.join(self.config.checkpoint_dir)

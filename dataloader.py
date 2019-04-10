@@ -38,14 +38,10 @@ class DataLoader(object):
         elif (not self.config.num_files_to_load) and self.mode == "test_data/full_size_test_images":
             print("test files loading: ", os.path.join(self.config.dataset_dir, self.phone, self.mode, "*"))
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "*")))
-            dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "*")))
         elif self.config.num_files_to_load and self.mode == "test_data/full_size_test_images":
             print("test files loading: ",
                   os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*"))
             phone_files = sorted(
-                glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "*")))[
-                          :self.config.num_files_to_load]
-            dslr_files = sorted(
                 glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "*")))[
                           :self.config.num_files_to_load]
         else:
@@ -68,13 +64,16 @@ class DataLoader(object):
         for res in phone_loaders:
             phone_data.extend(res.get())
 
-        dslr_loaders = [
-            pool.apply_async(load_files, (
-                dslr_files[i * train_num:i * train_num + train_num], self.config.res, self.config.test_mode))
-            for i in range(8)]
-        dslr_data = []
-        for res in dslr_loaders:
-            dslr_data.extend(res.get())
+        if self.mode == "training_data" or self.mode == "test_data/patches":
+            dslr_loaders = [
+                pool.apply_async(load_files, (
+                    dslr_files[i * train_num:i * train_num + train_num], self.config.res, self.config.test_mode))
+                for i in range(8)]
+            dslr_data = []
+            for res in dslr_loaders:
+                dslr_data.extend(res.get())
+        else:
+            dslr_data = []
 
         time2 = time.time() - start_time
         print("%d image pairs loaded for training set! setting took: %4.4fs" % (len(phone_data), time2))
