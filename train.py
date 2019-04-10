@@ -26,7 +26,7 @@ parser.add_argument("--content_layer", type=str, help="content layer to use in V
 parser.add_argument("--checkpoint_dir", type=str, help="directory for storing model checkpoints", default="./checkpoints")
 parser.add_argument("--testing_dir", type=str, help="directory for storing testing images", default="./testing")
 parser.add_argument("--num_files_to_load", type=int, help="number of images to load", default=None)
-parser.add_argument("--load_checkpoint", type=bool, help="load checkpoint or not", default=False)
+parser.add_argument("--load_checkpoint", type=int, help="load checkpoint or not", default=0)
 parser.add_argument("--test_mode", type=bool, help="testing mode or not", default=False)
 parser.add_argument("--phone_model", type=str, help="phone model to train", default="blackberry")
 parser.add_argument("--epoch_to_load", type=int, help="epoch num to load (use multiples of 1000)", default=None)
