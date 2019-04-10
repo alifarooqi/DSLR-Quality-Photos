@@ -14,7 +14,7 @@ class DataLoader(object):
         self.std = None
         self.phone = config.phone_model
         if config.test_mode:
-            self.mode = "test_data/patches"
+            self.mode = "test_data/full_size_test_images"
         else:
             self.mode = "training_data"
         self.phone_data, self.dslr_data, self.width, self.height = self.load_data()
@@ -29,12 +29,21 @@ class DataLoader(object):
             dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon", "*")))
         elif self.config.num_files_to_load and self.mode == "test_data/patches":
             print("test files loading: ",
-                  os.path.join(self.config.dataset_dir, self.phone, "training_data", self.phone, "*"))
+                  os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*"))
             phone_files = sorted(
-                glob(os.path.join(self.config.dataset_dir, self.phone, "training_data", self.phone, "*")))[
+                glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))[
                           :self.config.num_files_to_load]
             dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon", "*")))[
                          :self.config.num_files_to_load]
+        elif (not self.config.num_files_to_load) and self.mode == "test_data/full_size_test_images":
+            print("test files loading: ", os.path.join(self.config.dataset_dir, self.phone, self.mode, "*"))
+            phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "*")))
+        elif self.config.num_files_to_load and self.mode == "test_data/full_size_test_images":
+            print("test files loading: ",
+                  os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*"))
+            phone_files = sorted(
+                glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "*")))[
+                          :self.config.num_files_to_load]
         else:
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))[
                           :self.config.num_files_to_load]
