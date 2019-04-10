@@ -18,7 +18,7 @@ def load_files(files, res, test_mode):
         loaded = [scipy.misc.imread(filename, mode="RGB") for filename
                   in files]
     else:
-        loaded = [resize_img(scipy.misc.imread(filename, mode="RGB"), (1500, 1500)) for filename
+        loaded = [scipy.misc.imread(filename, mode="RGB") for filename
                   in files]
     return loaded
 
