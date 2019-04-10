@@ -32,6 +32,7 @@ parser.add_argument("--load_checkpoint", type=bool, help="load checkpoint or not
 parser.add_argument("--test_mode", type=bool, help="testing mode or not", default=True)
 parser.add_argument("--num_tests", type=int, help="number of tests to run", default=1)
 parser.add_argument("--phone_model", type=str, help="phone model to train", default="blackberry")
+parser.add_argument("--epoch_to_load", type=int, help="epoch num to load (use multiples of 1000)", default=None)
 
 config = parser.parse_args()
 

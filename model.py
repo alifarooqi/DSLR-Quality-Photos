@@ -133,15 +133,19 @@ class Model(object):
         if not epochnum:
             self.saver.save(self.sess, os.path.join(checkpoint_dir, self.config.phone_model), write_meta_graph=False)
         else:
-            self.saver.save(self.sess, os.path.join(checkpoint_dir, self.config.phone_model+str(epochnum)), write_meta_graph=False)
+            self.saver.save(self.sess, os.path.join(checkpoint_dir, self.config.phone_model + str(epochnum)),
+                            write_meta_graph=False)
 
     def load(self):
         checkpoint_dir = os.path.join(self.config.checkpoint_dir)
         ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
         print("Loading checkpoints from ", checkpoint_dir)
         if ckpt and ckpt.model_checkpoint_path:
-            ckpt_name = os.path.basename(ckpt.model_checkpoint_path)
-            self.saver.restore(self.sess, os.path.join(checkpoint_dir, "my_model"))
+            if not self.config.epoch_to_load:
+                self.saver.restore(self.sess, os.path.join(checkpoint_dir, self.config.phone_model))
+            else:
+                self.saver.restore(self.sess, os.path.join(checkpoint_dir,
+                                                           self.config.phone_model + str(self.config.epoch_to_load)))
             return True
         else:
             return False
