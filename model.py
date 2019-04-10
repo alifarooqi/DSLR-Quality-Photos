@@ -113,6 +113,9 @@ class Model(object):
                     epoch, time.time() - start, g_loss))
                 self.save()
 
+            if epoch % 1000 == 0:
+                self.save(epochnum=epoch)
+
     def test(self):
         if self.load():
             print(" [*] Load SUCCESS")
@@ -123,11 +126,14 @@ class Model(object):
         enhanced_batch = self.sess.run(self.generator_test, feed_dict={self.generator_in_test: noisy_batch})
         return noisy_batch, enhanced_batch
 
-    def save(self):
+    def save(self, epochnum=None):
         checkpoint_dir = os.path.join(self.config.checkpoint_dir)
         if not os.path.exists(checkpoint_dir):
             os.makedirs(checkpoint_dir)
-        self.saver.save(self.sess, os.path.join(checkpoint_dir, "my_model"), write_meta_graph=False)
+        if not epochnum:
+            self.saver.save(self.sess, os.path.join(checkpoint_dir, self.config.phone_model), write_meta_graph=False)
+        else:
+            self.saver.save(self.sess, os.path.join(checkpoint_dir, self.config.phone_model+str(epochnum)), write_meta_graph=False)
 
     def load(self):
         checkpoint_dir = os.path.join(self.config.checkpoint_dir)
