@@ -2,6 +2,7 @@ from utils import *
 from vgg19 import *
 import time
 import os
+import math
 
 
 class Model(object):
@@ -106,12 +107,19 @@ class Model(object):
             _ = self.sess.run(self.discriminator_solver,
                               feed_dict={self.generator_in: noisy_batch, self.gt_in: gt_batch})
 
+            isnan = False
             if epoch % 200 == 0:
                 g_loss = self.sess.run(self.g_loss,
                                        feed_dict={self.generator_in: noisy_batch, self.gt_in: gt_batch})
                 print("Iteration %d, runtime: %.3f s, generator loss: %.6f" % (
                     epoch, time.time() - start, g_loss))
-                self.save()
+                if math.isnan(g_loss):
+                    print("nan loss encountered, finishing training on epoch: ", epoch)
+                else:
+                    self.save()
+
+            if isnan:
+                break
 
             if epoch % 1000 == 0:
                 self.save(epochnum=epoch)
