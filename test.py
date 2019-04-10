@@ -42,7 +42,9 @@ if __name__ == '__main__':
     model = Model(sess, config, data_loader)
     for counter in range(config.num_tests):
         inputs, rets = model.test()
+        counter2 = 0
         for input, ret in zip(inputs, rets):
-            imsave(os.path.join(config.testing_dir, str(counter)+"_input.jpg"), postprocess(input))
-            imsave(os.path.join(config.testing_dir, str(counter)+"_output.jpg"), postprocess(ret))
+            imsave(os.path.join(config.testing_dir, str(counter2)+"_input.jpg"), postprocess(input))
+            imsave(os.path.join(config.testing_dir, str(counter2)+"_output.jpg"), postprocess(ret))
+            counter2 += 1
 
