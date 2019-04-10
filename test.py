@@ -9,7 +9,7 @@ import tensorflow as tf
 parser = argparse.ArgumentParser(description="training options")
 
 parser.add_argument("--num_epochs", type=int, help="number of epochs to train network for", default=100000)
-parser.add_argument("--use_bn", help="use batch nor or not. default is True", type=bool, default=True)
+parser.add_argument("--use_bn", help="use batch nor or not. default is True", type=bool, default=False)
 parser.add_argument("--batch_size", type=int, help="batch size for each epoch", default=5)
 parser.add_argument("--test_size", type=float, help="fraction for test size", default=0.10)
 parser.add_argument("--dataset_dir", type=str, help="directory for the SSID dataset only",

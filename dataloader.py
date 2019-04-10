@@ -26,10 +26,15 @@ class DataLoader(object):
         elif (not self.config.num_files_to_load) and self.mode == "test_data/patches":
             print("test files loading: ", os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*"))
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))
+            dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon", "*")))
         elif self.config.num_files_to_load and self.mode == "test_data/patches":
-            print("test files loading: ", os.path.join(self.config.dataset_dir, self.phone, "training_data", self.phone, "*"))
-            phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, "training_data", self.phone, "*")))[
+            print("test files loading: ",
+                  os.path.join(self.config.dataset_dir, self.phone, "training_data", self.phone, "*"))
+            phone_files = sorted(
+                glob(os.path.join(self.config.dataset_dir, self.phone, "training_data", self.phone, "*")))[
                           :self.config.num_files_to_load]
+            dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon", "*")))[
+                         :self.config.num_files_to_load]
         else:
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))[
                           :self.config.num_files_to_load]
@@ -50,7 +55,7 @@ class DataLoader(object):
         for res in phone_loaders:
             phone_data.extend(res.get())
 
-        if self.mode == "training_data":
+        if self.mode == "training_data" or self.mode == "test_data/patches":
             dslr_loaders = [
                 pool.apply_async(load_files, (
                     dslr_files[i * train_num:i * train_num + train_num], self.config.res, self.config.test_mode))
