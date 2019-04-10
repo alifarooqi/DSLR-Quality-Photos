@@ -123,7 +123,7 @@ class Model(object):
             print(" [!] Load failed...")
             return [], []
         for i in range(len(self.noisy_train)):
-            self.noisy_train[i, :, :, :] = preprocess(self.noisy_train[i])
+            self.noisy_train[i] = preprocess(self.noisy_train[i])
         enhanced_batch = self.sess.run(self.generator_test, feed_dict={self.generator_in_test: self.noisy_train})
         return noisy_train, enhanced_batch
 
