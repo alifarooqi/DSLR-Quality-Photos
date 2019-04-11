@@ -6,7 +6,9 @@ from dataloader import *
 from model import *
 import tensorflow as tf
 
-parser = argparse.ArgumentParser(description="training options")
+parser = argparse.ArgumentParser(description="testing options")
+
+parser.add_argument("phone_model", type=str, help="phone model to test")
 
 parser.add_argument("--num_epochs", type=int, help="number of epochs to train network for", default=100000)
 parser.add_argument("--use_bn", help="use batch nor or not. default is True", type=bool, default=False)
@@ -31,7 +33,6 @@ parser.add_argument("--num_files_to_load", type=int, help="number of images to l
 parser.add_argument("--load_checkpoint", type=bool, help="load checkpoint or not", default=True)
 parser.add_argument("--test_mode", type=bool, help="testing mode or not", default=True)
 parser.add_argument("--num_tests", type=int, help="number of tests to run", default=1)
-parser.add_argument("--phone_model", type=str, help="phone model to train", default="blackberry")
 parser.add_argument("--epoch_to_load", type=int, help="epoch num to load (use multiples of 1000)", default=None)
 
 config = parser.parse_args()

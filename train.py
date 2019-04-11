@@ -6,6 +6,8 @@ import tensorflow as tf
 
 parser = argparse.ArgumentParser(description="training options")
 
+parser.add_argument("phone_model", type=str, help="phone model to train")
+
 parser.add_argument("--num_epochs", type=int, help="number of epochs to train network for", default=100000)
 parser.add_argument("--use_bn", help="use batch nor or not. default is True", type=bool, default=False)
 parser.add_argument("--batch_size", type=int, help="batch size for each epoch", default=50)
@@ -28,7 +30,6 @@ parser.add_argument("--testing_dir", type=str, help="directory for storing testi
 parser.add_argument("--num_files_to_load", type=int, help="number of images to load", default=None)
 parser.add_argument("--load_checkpoint", type=int, help="load checkpoint or not", default=0)
 parser.add_argument("--test_mode", type=bool, help="testing mode or not", default=False)
-parser.add_argument("--phone_model", type=str, help="phone model to train", default="blackberry")
 parser.add_argument("--epoch_to_load", type=int, help="epoch num to load (use multiples of 1000)", default=None)
 
 config = parser.parse_args()
