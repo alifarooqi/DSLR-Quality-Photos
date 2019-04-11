@@ -115,6 +115,7 @@ class Model(object):
                     epoch, time.time() - start, g_loss))
                 if math.isnan(g_loss):
                     print("nan loss encountered, finishing training on epoch: ", epoch)
+                    isnan = True
                 else:
                     self.save()
 
