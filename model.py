@@ -80,7 +80,7 @@ class Model(object):
             conv4 = lrelu(conv4)
             conv5 = convlayer(conv4, 128, 3, 2, "conv_5", True, activation=None)
             conv5 = lrelu(conv5)
-            flat = tf.contrib.layers.flatten(conv4)
+            flat = tf.contrib.layers.flatten(conv5)
             fc1 = tf.layers.dense(flat, units=1024, activation=None)
             fc1 = lrelu(fc1)
             logits = tf.layers.dense(fc1, units=1, activation=None)

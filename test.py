@@ -40,6 +40,10 @@ config = parser.parse_args()
 if __name__ == '__main__':
     tf.reset_default_graph()
     sess = tf.Session()
+    config.checkpoint_dir = config.phone_model + "_" + config.checkpoint_dir
+    if not os.path.exists(config.checkpoint_dir):
+        print("making ckpt dir: ", config.checkpoint_dir)
+        os.makedirs(config.checkpoint_dir)
     data_loader = DataLoader(config)
     model = Model(sess, config, data_loader)
     for counter in range(config.num_tests):

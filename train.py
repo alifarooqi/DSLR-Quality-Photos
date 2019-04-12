@@ -35,6 +35,10 @@ parser.add_argument("--epoch_to_load", type=int, help="epoch num to load (use mu
 config = parser.parse_args()
 
 if __name__ == '__main__':
+    config.checkpoint_dir = config.phone_model + "_" + config.checkpoint_dir
+    if not os.path.exists(config.checkpoint_dir):
+        print("making ckpt dir: ", config.checkpoint_dir)
+        os.makedirs(config.checkpoint_dir)
     tf.reset_default_graph()
     sess = tf.Session()
     data_loader = DataLoader(config)
