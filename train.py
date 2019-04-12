@@ -25,7 +25,7 @@ parser.add_argument("--learning_rate", type=float, help="learning rate", default
 parser.add_argument("--vgg_dir", type=str, help="directory for trained VGG 19 model",
                     default="vgg_pretrained/imagenet-vgg-verydeep-19.mat")
 parser.add_argument("--content_layer", type=str, help="content layer to use in VGG 19 net", default="relu5_4")
-parser.add_argument("--checkpoint_dir", type=str, help="directory for storing model checkpoints", default="./checkpoints")
+parser.add_argument("--checkpoint_dir", type=str, help="directory for storing model checkpoints", default="checkpoints")
 parser.add_argument("--testing_dir", type=str, help="directory for storing testing images", default="./testing")
 parser.add_argument("--num_files_to_load", type=int, help="number of images to load", default=None)
 parser.add_argument("--load_checkpoint", type=int, help="load checkpoint or not", default=0)
@@ -35,7 +35,7 @@ parser.add_argument("--epoch_to_load", type=int, help="epoch num to load (use mu
 config = parser.parse_args()
 
 if __name__ == '__main__':
-    config.checkpoint_dir = config.phone_model + "_" + config.checkpoint_dir
+    config.checkpoint_dir = "./" + config.phone_model + "_" + config.checkpoint_dir
     if not os.path.exists(config.checkpoint_dir):
         print("making ckpt dir: ", config.checkpoint_dir)
         os.makedirs(config.checkpoint_dir)
