@@ -69,7 +69,7 @@ class DataLoader(object):
         for res in phone_loaders:
             phone_data.extend(res.get())
 
-        if self.mode == "training_data" or self.mode == "test_data/patches":
+        if (self.mode == "training_data" or self.mode == "test_data/patches") and not self.config.run_img:
             dslr_loaders = [
                 pool.apply_async(load_files, (
                     dslr_files[i * train_num:i * train_num + train_num], self.config.res, self.config.test_mode))
