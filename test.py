@@ -57,5 +57,7 @@ if __name__ == '__main__':
         for input, ret in zip(inputs, rets):
             imsave(os.path.join(config.testing_dir, str(counter2)+"_input.jpg"), postprocess(input))
             imsave(os.path.join(config.testing_dir, str(counter2)+"_output.jpg"), postprocess(ret))
+            if config.test_patches:
+                imsave(os.path.join(config.testing_dir, str(counter2)+"_gt.jpg"), postprocess(ret))
             counter2 += 1
 
