@@ -58,6 +58,6 @@ if __name__ == '__main__':
             imsave(os.path.join(config.testing_dir, str(counter2)+"_input.jpg"), postprocess(input))
             imsave(os.path.join(config.testing_dir, str(counter2)+"_output.jpg"), postprocess(ret))
             if config.test_patches:
-                imsave(os.path.join(config.testing_dir, str(counter2)+"_gt.jpg"), postprocess(gt))
+                imsave(os.path.join(config.testing_dir, str(counter2)+"_gt.jpg"), gt)
             counter2 += 1
 
