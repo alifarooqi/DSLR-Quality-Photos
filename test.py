@@ -52,12 +52,12 @@ if __name__ == '__main__':
     data_loader = DataLoader(config)
     model = Model(sess, config, data_loader)
     for counter in range(config.num_tests):
-        inputs, rets = model.test()
+        inputs, rets, gts = model.test()
         counter2 = 0
-        for input, ret in zip(inputs, rets):
+        for input, ret, gt in zip(inputs, rets, gts):
             imsave(os.path.join(config.testing_dir, str(counter2)+"_input.jpg"), postprocess(input))
             imsave(os.path.join(config.testing_dir, str(counter2)+"_output.jpg"), postprocess(ret))
             if config.test_patches:
-                imsave(os.path.join(config.testing_dir, str(counter2)+"_gt.jpg"), postprocess(ret))
+                imsave(os.path.join(config.testing_dir, str(counter2)+"_gt.jpg"), postprocess(gt))
             counter2 += 1
 
