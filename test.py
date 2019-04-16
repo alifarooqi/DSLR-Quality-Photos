@@ -62,7 +62,7 @@ if __name__ == '__main__':
             imsave(os.path.join(config.testing_dir, str(counter2)+"_input.jpg"), postprocess(input))
             imsave(os.path.join(config.testing_dir, str(counter2)+"_output.jpg"), postprocess(ret))
             counter2 += 1
-    elif:
+    else:
         for counter in range(config.num_tests):
             inputs, rets, gts = model.test()
             counter2 = 0
