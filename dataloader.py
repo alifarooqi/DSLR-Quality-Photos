@@ -24,7 +24,7 @@ class DataLoader(object):
 
     def load_data(self):
         if self.config.run_img:
-            phone_files = glob(os.path.join(self.config.run_img))
+            phone_files = glob(os.path.join(self.config.run_img, "*"))
         elif (not self.config.num_files_to_load) and self.mode == "training_data":
             phone_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, self.phone, "*")))
             dslr_files = sorted(glob(os.path.join(self.config.dataset_dir, self.phone, self.mode, "canon/*")))
