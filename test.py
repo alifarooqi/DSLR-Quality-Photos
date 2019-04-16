@@ -56,6 +56,7 @@ if __name__ == '__main__':
     data_loader = DataLoader(config)
     model = Model(sess, config, data_loader)
     if config.run_img:
+        print(config.testing_dir)
         inputs, rets, gts = model.test()
         counter2 = 0
         for input, ret, gt in zip(inputs, rets, gts):
