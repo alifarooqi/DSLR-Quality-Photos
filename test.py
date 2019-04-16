@@ -28,10 +28,11 @@ parser.add_argument("--vgg_dir", type=str, help="directory for trained VGG 19 mo
                     default="vgg_pretrained/imagenet-vgg-verydeep-19.mat")
 parser.add_argument("--content_layer", type=str, help="content layer to use in VGG 19 net", default="relu5_4")
 parser.add_argument("--checkpoint_dir", type=str, help="directory for storing model checkpoints", default="checkpoints")
-parser.add_argument("--testing_dir", type=str, help="directory for storing testing images", default="./testing")
+parser.add_argument("--testing_dir", type=str, help="directory for storing testing images", default="testing")
 parser.add_argument("--num_files_to_load", type=int, help="number of images to load", default=20)
 parser.add_argument("--load_checkpoint", type=bool, help="load checkpoint or not", default=True)
 parser.add_argument("--test_mode", type=bool, help="testing mode or not", default=True)
+parser.add_argument("--test_patches", type=int, help="patches (1) or full (0)", default=1)
 parser.add_argument("--num_tests", type=int, help="number of tests to run", default=1)
 parser.add_argument("--epoch_to_load", type=int, help="epoch num to load (use multiples of 1000)", default=None)
 
@@ -44,6 +45,10 @@ if __name__ == '__main__':
     if not os.path.exists(config.checkpoint_dir):
         print("making ckpt dir: ", config.checkpoint_dir)
         os.makedirs(config.checkpoint_dir)
+    if config.test_patches:
+        config.testing_dir = os.path.join("./" + config.testing_dir, config.phone_model, "patches")
+    else:
+        config.testing_dir = os.path.join("./" + config.testing_dir, config.phone_model, "full_size")
     data_loader = DataLoader(config)
     model = Model(sess, config, data_loader)
     for counter in range(config.num_tests):

@@ -14,7 +14,10 @@ class DataLoader(object):
         self.std = None
         self.phone = config.phone_model
         if config.test_mode:
-            self.mode = "test_data/full_size_test_images"
+            if config.test_patches:
+                self.mode = "test_data/patches"
+            else:
+                self.mode = "test_data/full_size_test_images"
         else:
             self.mode = "training_data"
         self.phone_data, self.dslr_data, self.width, self.height = self.load_data()
