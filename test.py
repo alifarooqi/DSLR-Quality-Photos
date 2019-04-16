@@ -36,6 +36,8 @@ parser.add_argument("--test_patches", type=int, help="patches (1) or full (0)", 
 parser.add_argument("--num_tests", type=int, help="number of tests to run", default=1)
 parser.add_argument("--epoch_to_load", type=int, help="epoch num to load (use multiples of 1000)", default=None)
 
+parser.add_argument("--run_img", type=str, help="run_img", default=None)
+
 config = parser.parse_args()
 
 if __name__ == '__main__':
@@ -45,19 +47,29 @@ if __name__ == '__main__':
     if not os.path.exists(config.checkpoint_dir):
         print("making ckpt dir: ", config.checkpoint_dir)
         os.makedirs(config.checkpoint_dir)
-    if config.test_patches:
+    if config.run_img:
+        config.testing_dir = os.path.join("./" + config.testing_dir, "custom_images")
+    elif config.test_patches:
         config.testing_dir = os.path.join("./" + config.testing_dir, config.phone_model, "patches")
     else:
         config.testing_dir = os.path.join("./" + config.testing_dir, config.phone_model, "full_size")
     data_loader = DataLoader(config)
     model = Model(sess, config, data_loader)
-    for counter in range(config.num_tests):
+    if config.run_img:
         inputs, rets, gts = model.test()
         counter2 = 0
         for input, ret, gt in zip(inputs, rets, gts):
             imsave(os.path.join(config.testing_dir, str(counter2)+"_input.jpg"), postprocess(input))
             imsave(os.path.join(config.testing_dir, str(counter2)+"_output.jpg"), postprocess(ret))
-            if config.test_patches:
-                imsave(os.path.join(config.testing_dir, str(counter2)+"_gt.jpg"), gt)
             counter2 += 1
+    elif:
+        for counter in range(config.num_tests):
+            inputs, rets, gts = model.test()
+            counter2 = 0
+            for input, ret, gt in zip(inputs, rets, gts):
+                imsave(os.path.join(config.testing_dir, str(counter2)+"_input.jpg"), postprocess(input))
+                imsave(os.path.join(config.testing_dir, str(counter2)+"_output.jpg"), postprocess(ret))
+                if config.test_patches:
+                    imsave(os.path.join(config.testing_dir, str(counter2)+"_gt.jpg"), gt)
+                counter2 += 1
 
