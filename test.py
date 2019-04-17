@@ -61,8 +61,8 @@ if __name__ == '__main__':
         print(len(inputs), len(rets), len(gts))
         for i in range(len(inputs)):
             print(i)
-            imsave(os.path.join(config.testing_dir, str(counter2)+"_input.jpg"), postprocess(inputs[i]))
-            imsave(os.path.join(config.testing_dir, str(counter2)+"_output.jpg"), postprocess(rets[i]))
+            imsave(os.path.join(config.testing_dir, str(i)+"_input.jpg"), postprocess(inputs[i]))
+            imsave(os.path.join(config.testing_dir, str(i)+"_output.jpg"), postprocess(rets[i]))
     else:
         for counter in range(config.num_tests):
             inputs, rets, gts = model.test()
