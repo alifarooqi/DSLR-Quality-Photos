@@ -58,6 +58,7 @@ if __name__ == '__main__':
     if config.run_img:
         print(config.testing_dir)
         inputs, rets, gts = model.test()
+        print(len(inputs))
         counter2 = 0
         for input, ret, gt in zip(inputs, rets, gts):
             print(counter2)
