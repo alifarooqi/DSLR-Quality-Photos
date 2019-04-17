@@ -58,9 +58,7 @@ if __name__ == '__main__':
     if config.run_img:
         print(config.testing_dir)
         inputs, rets, gts = model.test()
-        print(len(inputs), len(rets), len(gts))
         for i in range(len(inputs)):
-            print(i)
             imsave(os.path.join(config.testing_dir, str(i)+"_input.jpg"), postprocess(inputs[i]))
             imsave(os.path.join(config.testing_dir, str(i)+"_output.jpg"), postprocess(rets[i]))
     else:
