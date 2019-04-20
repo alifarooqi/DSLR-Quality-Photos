@@ -26,9 +26,9 @@ for i in range(1):
     np.append(inputs, imread(files[i * 3 + 1], mode="RGB"))
     np.append(outputs, imread(files[i * 3 + 2], mode="RGB"))
 
-tf.convert_to_tensor(gts+0., dtype=tf.float32)
-tf.convert_to_tensor(inputs+0., dtype=tf.float32)
-tf.convert_to_tensor(outputs+0., dtype=tf.float32)
+gts = tf.convert_to_tensor(gts+0., dtype=tf.float32)
+inputs = tf.convert_to_tensor(inputs+0., dtype=tf.float32)
+outputs = tf.convert_to_tensor(outputs+0., dtype=tf.float32)
 
 #print(np.shape(tf.square(gaussian_blur(gts) - gaussian_blur(outputs))))
 loss = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(outputs)))
