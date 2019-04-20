@@ -17,10 +17,14 @@ config.test_dir = os.path.join(config.test_dir, config.phone_model, "patches/*")
 files = sorted(glob(config.test_dir))
 num_samples = int(len(files) / 3)
 
+gts = []
+inputs = []
+outputs = []
 for i in range(1):
     print(files[i * 3], files[i * 3 + 1], files[i * 3 + 2])
-    gt_img = tf.float32([(imread(files[i * 3], mode="RGB"))])
-    input_img = tf.float32([(imread(files[i * 3 + 1], mode="RGB"))])
-    output_img = tf.float32([(imread(files[i * 3 + 2], mode="RGB"))])
-    loss = tf.reduce_mean(tf.square(gaussian_blur(gt_img) - gaussian_blur(output_img)))
-    print(loss)
+    gts.extend(tf.convert_to_tensor(imread(files[i * 3], mode="RGB"), dtype=tf.float32))
+    inputs.extend(tf.convert_to_tensor(imread(files[i * 3 + 1], mode="RGB"), dtype=tf.float32))
+    outputs.extend(tf.convert_to_tensor(imread(files[i * 3 + 2], mode="RGB"), dtype=tf.float32))
+
+loss = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(outputs)))
+print(loss)
