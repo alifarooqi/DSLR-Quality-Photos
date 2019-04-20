@@ -28,12 +28,8 @@ for i in range(num_samples):
     inputs[i] = imread(files[i * 3 + 1], mode="RGB")
     outputs[i] = imread(files[i * 3 + 2], mode="RGB")
 
-loss_output = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(outputs))) + 2 * get_content_loss(
-    config.vgg_dir, gts, outputs,
-    config.content_layer)
-loss_input = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(inputs))) + 2 * get_content_loss(
-    config.vgg_dir, gts, outputs,
-    config.content_layer)
+loss_output = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(outputs)))
+loss_input = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(inputs)))
 sess = tf.Session()
 print("loss with output =", sess.run(loss_output))
 print("loss with input =", sess.run(loss_input))
