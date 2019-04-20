@@ -9,6 +9,9 @@ parser = argparse.ArgumentParser(description="testing options")
 
 parser.add_argument("phone_model", type=str, help="phone model to test")
 parser.add_argument("--test_dir", type=str, default="D:/FYPdenoising/dslr/test")
+parser.add_argument("--vgg_dir", type=str, help="directory for trained VGG 19 model",
+                    default="vgg_pretrained/imagenet-vgg-verydeep-19.mat")
+parser.add_argument("--content_layer", type=str, help="content layer to use in VGG 19 net", default="relu5_4")
 
 config = parser.parse_args()
 
@@ -25,8 +28,12 @@ for i in range(num_samples):
     inputs[i] = imread(files[i * 3 + 1], mode="RGB")
     outputs[i] = imread(files[i * 3 + 2], mode="RGB")
 
-loss_output = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(outputs)))
-loss_input = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(inputs)))
+loss_output = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(outputs))) + 2 * get_content_loss(
+    config.vgg_dir, gts, outputs,
+    config.content_layer)
+loss_input = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(inputs))) + 2 * get_content_loss(
+    config.vgg_dir, gts, outputs,
+    config.content_layer)
 sess = tf.Session()
 print("loss with output =", sess.run(loss_output))
 print("loss with input =", sess.run(loss_input))
