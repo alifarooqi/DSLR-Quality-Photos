@@ -32,4 +32,5 @@ for i in range(1):
 
 # print(np.shape(tf.square(gaussian_blur(gts) - gaussian_blur(outputs))))
 loss = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(outputs)))
-print(loss[0])
+sess = tf.Session()
+print(sess.run(loss))
