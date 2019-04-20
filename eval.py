@@ -22,4 +22,4 @@ for i in range(1):
     gt_img = np.float32([(imread(files[i * 3], mode="RGB"))])
     input_img = np.float32([(imread(files[i * 3 + 1], mode="RGB"))])
     output_img = np.float32([(imread(files[i * 3 + 2], mode="RGB"))])
-    loss = np.mean(np.square(gaussian_blur(gt_img) - gaussian_blur(output_img)))
+    loss = np.square(gaussian_blur(gt_img) - gaussian_blur(output_img))
