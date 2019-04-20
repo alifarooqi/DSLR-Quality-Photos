@@ -17,18 +17,18 @@ config.test_dir = os.path.join(config.test_dir, config.phone_model, "patches/*")
 files = sorted(glob(config.test_dir))
 num_samples = int(len(files) / 3)
 
-gts = []
-inputs = []
-outputs = []
+gts = np.array([])
+inputs = np.array([])
+outputs = np.array([])
 for i in range(1):
     print(files[i * 3], files[i * 3 + 1], files[i * 3 + 2])
-    gts.extend(imread(files[i * 3], mode="RGB"))
-    inputs.extend(imread(files[i * 3 + 1], mode="RGB"))
-    outputs.extend(imread(files[i * 3 + 2], mode="RGB"))
+    gts.append(imread(files[i * 3], mode="RGB"))
+    inputs.append(imread(files[i * 3 + 1], mode="RGB"))
+    outputs.append(imread(files[i * 3 + 2], mode="RGB"))
 
-tf.convert_to_tensor(gts, dtype=tf.float32)
-tf.convert_to_tensor(inputs, dtype=tf.float32)
-tf.convert_to_tensor(outputs, dtype=tf.float32)
+tf.convert_to_tensor(gts+0., dtype=tf.float32)
+tf.convert_to_tensor(inputs+0., dtype=tf.float32)
+tf.convert_to_tensor(outputs+0., dtype=tf.float32)
 
 print(np.shape(tf.square(gaussian_blur(gts) - gaussian_blur(outputs))))
 loss = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(outputs)))
