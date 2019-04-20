@@ -30,6 +30,6 @@ tf.convert_to_tensor(gts+0., dtype=tf.float32)
 tf.convert_to_tensor(inputs+0., dtype=tf.float32)
 tf.convert_to_tensor(outputs+0., dtype=tf.float32)
 
-print(np.shape(tf.square(gaussian_blur(gts) - gaussian_blur(outputs))))
+#print(np.shape(tf.square(gaussian_blur(gts) - gaussian_blur(outputs))))
 loss = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(outputs)))
 print(loss)
