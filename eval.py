@@ -22,9 +22,13 @@ inputs = []
 outputs = []
 for i in range(1):
     print(files[i * 3], files[i * 3 + 1], files[i * 3 + 2])
-    gts.extend(tf.convert_to_tensor(imread(files[i * 3], mode="RGB"), dtype=tf.float32))
-    inputs.extend(tf.convert_to_tensor(imread(files[i * 3 + 1], mode="RGB"), dtype=tf.float32))
-    outputs.extend(tf.convert_to_tensor(imread(files[i * 3 + 2], mode="RGB"), dtype=tf.float32))
+    gts.extend(imread(files[i * 3], mode="RGB"))
+    inputs.extend(imread(files[i * 3 + 1], mode="RGB"))
+    outputs.extend(imread(files[i * 3 + 2], mode="RGB"))
+
+tf.convert_to_tensor(gts, dtype=tf.float32)
+tf.convert_to_tensor(inputs, dtype=tf.float32)
+tf.convert_to_tensor(outputs, dtype=tf.float32)
 
 loss = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(outputs)))
 print(loss)
