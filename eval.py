@@ -22,9 +22,9 @@ inputs = np.array([])
 outputs = np.array([])
 for i in range(1):
     print(files[i * 3], files[i * 3 + 1], files[i * 3 + 2])
-    gts.append(imread(files[i * 3], mode="RGB"))
-    inputs.append(imread(files[i * 3 + 1], mode="RGB"))
-    outputs.append(imread(files[i * 3 + 2], mode="RGB"))
+    np.append(gts, imread(files[i * 3], mode="RGB"))
+    np.append(inputs, imread(files[i * 3 + 1], mode="RGB"))
+    np.append(outputs, imread(files[i * 3 + 2], mode="RGB"))
 
 tf.convert_to_tensor(gts+0., dtype=tf.float32)
 tf.convert_to_tensor(inputs+0., dtype=tf.float32)
