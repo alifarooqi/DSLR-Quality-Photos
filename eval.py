@@ -21,7 +21,6 @@ gts = np.zeros((num_samples, 100, 100, 3), dtype=np.float32)
 inputs = np.zeros((num_samples, 100, 100, 3), dtype=np.float32)
 outputs = np.zeros((num_samples, 100, 100, 3), dtype=np.float32)
 for i in range(num_samples):
-    print(files[i * 3], files[i * 3 + 1], files[i * 3 + 2])
     gts[i] = imread(files[i * 3], mode="RGB")
     inputs[i] = imread(files[i * 3 + 1], mode="RGB")
     outputs[i] = imread(files[i * 3 + 2], mode="RGB")
