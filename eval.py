@@ -18,8 +18,8 @@ files = sorted(glob(config.test_dir))
 num_samples = int(len(files) / 3)
 
 for i in range(1):
-    gt_img = imread(files[i * 3], mode="RGB")
-    input_img = imread(files[i * 3 + 1], mode="RGB")
-    output_img = imread(files[i * 3 + 2], mode="RGB")
+    gt_img = preprocess(imread(files[i * 3], mode="RGB"))
+    input_img = preprocess(imread(files[i * 3 + 1], mode="RGB"))
+    output_img = preprocess(imread(files[i * 3 + 2], mode="RGB"))
     loss = np.mean(np.square(gaussian_blur(gt_img) - gaussian_blur(output_img)))
 
