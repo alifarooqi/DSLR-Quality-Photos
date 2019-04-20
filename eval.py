@@ -17,20 +17,17 @@ config.test_dir = os.path.join(config.test_dir, config.phone_model, "patches/*")
 files = sorted(glob(config.test_dir))
 num_samples = int(len(files) / 3)
 
-gts = np.zeros((1, 100, 100, 3), dtype=np.float32)
-inputs = np.zeros((1, 100, 100, 3), dtype=np.float32)
-outputs = np.zeros((1, 100, 100, 3), dtype=np.float32)
-for i in range(1):
+gts = np.zeros((num_samples, 100, 100, 3), dtype=np.float32)
+inputs = np.zeros((num_samples, 100, 100, 3), dtype=np.float32)
+outputs = np.zeros((num_samples, 100, 100, 3), dtype=np.float32)
+for i in range(num_samples):
     print(files[i * 3], files[i * 3 + 1], files[i * 3 + 2])
     gts[i] = imread(files[i * 3], mode="RGB")
     inputs[i] = imread(files[i * 3 + 1], mode="RGB")
     outputs[i] = imread(files[i * 3 + 2], mode="RGB")
 
-# gts = tf.convert_to_tensor(gts, dtype=tf.float32)
-# inputs = tf.convert_to_tensor(inputs, dtype=tf.float32)
-# outputs = tf.convert_to_tensor(outputs, dtype=tf.float32)
-
-# print(np.shape(tf.square(gaussian_blur(gts) - gaussian_blur(outputs))))
-loss = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(outputs)))
+loss_output = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(outputs)))
+loss_input = tf.reduce_mean(tf.square(gaussian_blur(gts) - gaussian_blur(inputs)))
 sess = tf.Session()
-print(sess.run(loss))
+print("loss with output =", sess.run(loss_output))
+print("loss with input =", sess.run(loss_input))
