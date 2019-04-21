@@ -3,6 +3,7 @@ from vgg19 import *
 import time
 import os
 import math
+from matplotlib import pyplot as plt
 
 
 class Model(object):
@@ -98,6 +99,8 @@ class Model(object):
             print(" Overall training starts from beginning")
 
         start = time.time()
+        plt_epoch = []
+        plt_loss = []
         for epoch in range(0, self.config.num_epochs):
             if epoch == 1:
                 print("1 epoch completed")
@@ -123,6 +126,17 @@ class Model(object):
                 break
 
             if epoch % 1000 == 0:
+                plt_epoch.append(epoch)
+                plt_loss.append(self.sess.run(self.g_loss,
+                                              feed_dict={self.generator_in: noisy_batch, self.gt_in: gt_batch}))
+                plt.clf()
+                plt.plot(plt_epoch, plt_loss, color="blue")
+                plt.title("Generator Loss vs. Epoch")
+                plt.xlabel("Epoch")
+                plt.ylabel("Generator Loss")
+                plt.legend(loc="best")
+                plt.tight_layout()
+                plt.savefig(os.path.join(self.config.checkpoint_dir, "graph.png"))
                 self.save(epochnum=epoch)
 
     def test(self):
